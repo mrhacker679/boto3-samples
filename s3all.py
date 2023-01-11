@@ -100,6 +100,61 @@ file_name = 'example.txt'
 s3.Bucket(bucket_name).download_file(file_name, '/path/to/local/file')
 
 ###############################################################
+
+
+###################### ADDING POLICY TO BUCKET ##################################
+
+import json, boto3
+
+s3 = boto3.client('s3')
+
+bucket_name = 'mybukcet-123'
+bucket_policy = {
+   "Version":"2012-10-17",
+   "Statement":[
+     {
+       "Sid":"PolicyForAllowUploadWithACL",
+       "Effect":"Allow",
+       "Principal": "*",
+       "Action":["s3:GetObject","s3:GetObjectVersion"],
+       "Resource":"arn:aws:s3:::mybucket-123/*",
+     }
+   ]
+}
     
+bucket_policy = json.dumps(bucket_ploicy)
+s3.put_bucket_policy(Bucket=bucket_name, Policy=bucket_policy) 
+
+
+#############################################################################
+
+######################### TO GET THE BUCKET POLICY #########################
+
+import boto3
+
+s3 = boto3.client('s3')
+policy = s3.get_bucket_policy('mybucket-123')
+print(policy)
+
+############################################################################
+
+######################### STATIC WEB SITE HOSTING ##########################
+
+import boto3
+
+s3 = boto3.client('s3')
+bucket_name = 'mybucket-123'
+conf = {
+    'ErrorDocument': {'Key': 'error.html'},
+    'IndexDocument': {'Suffix': 'index.html'}
+}
+
+s3.put_bucket_website(Bucket=bucket_name, WebsiteConfiguration=conf)
+
+args = {'ACL': 'public-read', 'ContentType': 'text/html'}
+upload_files('data/index.html', bucket_name, object_name='index.html', args=args)
     
- 
+###########################################################################
+
+
+
