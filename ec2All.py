@@ -67,3 +67,57 @@ instances = ec2_resource.create_instances(
     ],
     SecurityGroups = ['mysecuritygroup']
 )
+
+
+##################### Start or Stop EC2 Instance #########################
+
+#!/usr/bin/python3
+import boto3
+
+# Create an EC2 client
+ec2 = boto3.client('ec2')
+
+# Set the ID of the instance
+instance_id = 'i-01234567890abcdef0'
+
+# Start the instance
+ec2.start_instances(InstanceIds=[instance_id])
+
+# Stop the instance
+ec2.stop_instances(InstanceIds=[instance_id])
+
+
+#################### DELETE EC2 ########################################
+
+import boto3
+
+# Create an EC2 client
+ec2 = boto3.client('ec2')
+
+# Set the ID of the instance
+instance_id = 'i-01234567890abcdef0'
+
+# Terminate the instance
+ec2.terminate_instances(InstanceIds=[instance_id])
+
+
+
+################## Get All EC2 ##############################
+
+import boto3
+
+# Create an EC2 client
+ec2 = boto3.client('ec2')
+
+# Get information about all instances
+response = ec2.describe_instances()
+
+# Iterate through the instances
+for reservation in response["Reservations"]:
+    for instance in reservation["Instances"]:
+        # Print the instance ID
+        print(instance["InstanceId"])
+        # Print the instance type
+        print(instance["InstanceType"])
+        # Print the instance state
+        print(instance["State"]["Name"])
